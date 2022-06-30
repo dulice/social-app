@@ -1,15 +1,8 @@
-import logo from './logo.svg';
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
-import Header from './components/header';
-import Signup from './pages/Signup';
-import Login from './pages/Login';
 import UserProtect from './protectedRoute/UserProtect';
-import Home from './pages/Home';
-import Setting from './pages/Setting';
-import Profile from './pages/Profile';
-import Explore from './pages/Explore';
-import UploadPost from './pages/UploadPost';
+import Header from './components/header';
+import { Home, Setting, Profile, Explore, UploadPost, Suggest, Chat, Signup, Login} from './pages'
 
 function App() {
   return (
@@ -21,6 +14,8 @@ function App() {
       <Route path="/profile/:username" element={ <UserProtect> <Profile /> </UserProtect>}  />
       <Route path="/explore" element={ <UserProtect> <Explore /> </UserProtect>}  />
       <Route path="/uploadpost" element={ <UserProtect> <UploadPost /> </UserProtect>}  />
+      <Route path="/explore/people" element={ <UserProtect> <Suggest /> </UserProtect>}  />
+      <Route path="/chat" element={ <UserProtect> <Chat /> </UserProtect>}  />
         <Route path="/register" element={ <Signup />}  />
         <Route path="/login" element={ <Login />}  />
       </Routes>

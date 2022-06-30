@@ -28,7 +28,7 @@ const Posts = () => {
         }
       }
       fetchPosts();
-  },[user._id, dispatch]);
+  },[user._id, dispatch, user.followings.length]);
 
   const sortPost = posts?.slice().sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt)).reverse();
 

@@ -12,6 +12,7 @@
     "@testing-library/user-event": "^13.5.0",
     "autoprefixer": "^10.4.7",
     "axios": "^0.27.2",
+    "emoji-picker-react": "^3.5.1",
     "flowbite": "^1.4.7",
     "flowbite-react": "^0.0.27",
     "moment": "^2.29.3",

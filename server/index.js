@@ -6,6 +6,7 @@ const userRoute = require("./routes/UserRoute");
 const authRoute = require("./routes/AuthRoute");
 const postRoute = require("./routes/PostRoute");
 const imageRoute = require("./routes/imageRoute");
+const chatRoute = require("./routes/chatRoute");
 
 dotenv.config();
 
@@ -18,7 +19,6 @@ app.use(cors());
 
 mongoose.connect(process.env.DB_CONNECT)
     .then(() => {
-        app.listen(5000);
         console.log('connect to db');
     })
     .catch((err) => {
@@ -29,3 +29,9 @@ app.use("/api/upload", imageRoute);
 app.use("/api/user", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
+app.use("/api/chats", chatRoute);
+
+const PORT = process.env.PORT || 5000
+const server = app.listen(PORT, () => {
+    console.log('running on port 5000')
+});

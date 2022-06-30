@@ -37,8 +37,8 @@ const Setting = () => {
         setLoading(true);
         try {
             const { data: image } = await axios.post('/api/upload', {profilePicture});
-            console.log(image);
-            const { data } = await axios.put(`/api/users/${user._id}`, {
+            // console.log(image);
+            await axios.put(`/api/users/${user._id}`, {
                 userId: user._id,
                 username,
                 bio,
@@ -48,6 +48,7 @@ const Setting = () => {
                 currentTown,
                 profilePicture: image,
             });
+            const { data } = await axios.get(`/api/users/eachuser?userId=${user._id}`);
             setLoading(false);
             dispatch(userAction.register(data));
             localStorage.setItem('user', JSON.stringify(data));

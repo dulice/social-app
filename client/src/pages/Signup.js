@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux';
 import { userAction } from '../redux/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useRegisterMutation } from '../redux/userApi';
 
 const Signup = () => {
     const dispatch = useDispatch();

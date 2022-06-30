@@ -91,6 +91,22 @@ router.get('/friends/:userId', expressAsyncHandler( async (req, res) => {
     res.status(200).json(friendList);
 }));
 
+//get follower
+router.get('/follower/:userId', expressAsyncHandler( async (req, res) => {
+    const user = await User.findById(req.params.userId);
+    const friends = await Promise.all(
+        user.followers.map(friendId => {
+            return User.findById(friendId);
+        })
+    );
+    let friendList = [];
+    friends.map((friend) => {
+        const { _id, username, profilePicture } = friend;
+        friendList.push({_id, username, profilePicture});
+    });
+    res.status(200).json(friendList);
+}));
+
 //follow user
 router.put('/:id/follow', expressAsyncHandler (async (req, res) => {
     //param ka ngar --> follow loat ml --> following pyit

@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
-import { FaEnvelope, FaLock, FaUserAlt } from 'react-icons/fa';
+import { FaEnvelope, FaLock } from 'react-icons/fa';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { userAction } from '../redux/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { useRegisterMutation } from '../redux/userApi';
 
 const Login = () => {
     const dispatch = useDispatch();
