@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { userAction } from '../redux/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -25,7 +26,9 @@ const Login = () => {
             localStorage.setItem('user', JSON.stringify(userData));
             navigate('/');
         } catch (err) {
-            console.log(err.message);
+            if(err.response) {
+                toast.error(err.response.data.message);
+            }
         }
     };
 

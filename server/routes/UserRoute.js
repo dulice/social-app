@@ -55,7 +55,7 @@ router.get('/suggest', expressAsyncHandler ( async (req, res) => {
     ? await User.findById(userId)
     : await User.findOne({username});
     const suggestUser = user.followers.filter(id => !user.followings.includes(id));
-    console.log(suggestUser);
+    // console.log(suggestUser);
     const followuser = await Promise.all(
         suggestUser.map(followId => {
            return User.findById(followId);

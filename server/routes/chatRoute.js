@@ -21,15 +21,13 @@ router.post('/', expressAsyncHandler(async (req, res) => {
 router.get('/chat', expressAsyncHandler (async (req, res) => {
     const sender = req.query.sender;
     const reciever = req.query.reciever;
-    const recieve = await Chat.find({reciever: reciever || sender});
-    const send = await Chat.find({sender: reciever || sender});
+    const recieve = await Chat.find({reciever: reciever});
+    const send = await Chat.find({sender: reciever});
     if(recieve && send) {
         res.status(200).json(recieve.concat(...send));
     } else {
         res.status(404).json({message: "chat not found"})
     }
-    // res.status(200).json(recieve);
-
 }));
 
 router.get('/recieve/:reciever', expressAsyncHandler (async (req, res) => {

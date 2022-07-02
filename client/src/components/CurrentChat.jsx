@@ -5,22 +5,27 @@ import { AiOutlineSend } from 'react-icons/ai';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import Loading from './Loading';
+import ScrollToBottom from 'react-scroll-to-bottom';
+import moment from 'moment';
 
-const CurrentChat = ({chatUser}) => {
-    // let chats = [];
+const CurrentChat = ({chatUser, socket}) => {
     const me = useSelector(state => state.user.user);
     const [chats, setChats] = useState([]);
     const [message, setMessage] = useState('');
     const [showEmoji, setShowEmoji] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [messages, setMessages] = useState([]);
 
-    useEffect(() => {
+     useEffect(() => {
         const fetchChat = async () => {
             setLoading(true);
             try{
-                const { data } = await axios.get(`/api/chats/chat?sender=${me._id}&reciever=${chatUser._id}`);
-                setChats(data);
-                setLoading(false);
+                if(chatUser._id){
+                    const { data } = await axios.get(`/api/conversations/find/${me?._id}/${chatUser._id}`);
+                    const res = await axios.get(`/api/messages/${data?._id}`);
+                    setChats(res.data);
+                    setLoading(false);
+                }
             } catch (err) {
                 console.log(err.message);
                 setLoading(false);
@@ -29,10 +34,17 @@ const CurrentChat = ({chatUser}) => {
         fetchChat();
     },[me._id, chatUser._id]);
 
+    // useEffect(() => {
+    //     socket.on("chatResult", (result) => {
+    //         setMessages([...messages, {message: result.message, sender: result.sender}]);
+    //         console.log(messages);
+    //     });
+    // },[messages, socket]);
+
     const sortChat = chats?.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
 
     const onEmojiClick = (event, emojiObject) => {
-        console.log(emojiObject.emoji);
+        // console.log(emojiObject.emoji);
         let msg = message;
         msg += emojiObject.emoji;
         setMessage(msg);
@@ -41,13 +53,19 @@ const CurrentChat = ({chatUser}) => {
     const handleSubmitChat = async (e) => {
         e.preventDefault();
         try {
-            const { data } = await axios.post('/api/chats', {
+            if(chatUser._id) {
+                const { data } = await axios.get(`/api/conversations/find/${me?._id}/${chatUser._id}`);
+                await axios.post('/api/messages', {
+                conversationId: data?._id,
                 message,
                 sender: me._id,
-                reciever: chatUser._id 
             });
+            let date = new Date();
+            setMessages([...messages, {message, createdAt: date, sender: me._id}]);
+
+            socket.emit('chatInput', {message, sender: me._id, conversationId: data?._id,});
             setMessage('');
-            console.log(data);
+            }
         } catch (err) {
             console.log(err.message);
         }
@@ -64,21 +82,39 @@ const CurrentChat = ({chatUser}) => {
                 <span className='font-medium text-sm '>{chatUser.username}</span>
             </div>
             <hr />
-            {loading ? <Loading /> :
-            (sortChat?.map(chat => (
-                <div key={chat._id}>
-                    <p className={`mt-5 ${ chat.sender === me._id ? 'text-right mr-3' : 'text-left ml-3'}`}>
-                        <span className={`border p-2 rounded-full ${ chat.sender === me._id ? 'bg-gray-200' : 'bg-blue-500 text-white'}`}>{chat.message}</span>
-                    </p>
+            <ScrollToBottom>
+                <div className='overflow-y-scroll' style={{height: '60vh'}} onClick={() => setShowEmoji(false)}>
+                    {loading ? <Loading /> :
+                    chats.length === 0 ? (<p className='font-medium mt-5'>Send message to start converstion.</p>)
+                    : (sortChat?.map(chat => (
+                        <div key={chat._id}>
+                            <p className={`mt-5 ${ chat.sender === me._id ? 'text-right mr-3' : 'text-left ml-3'}`}>
+                                <span className={`border p-2 rounded-full ${ chat.sender === me._id ? 'bg-gray-200' : 'bg-blue-500 text-white'}`}>{chat.message}</span>
+                            </p>
+                            <p className={`mt-1 ${ chat.sender === me._id ? 'text-right mr-3' : 'text-left ml-3'}`}>
+                                <small className=''>{moment(chat.createdAt).fromNow()}</small>
+                            </p>
+                        </div>
+                    )))
+                    }
+                    {messages?.map((chat, index) => (
+                        <div key={index}>
+                        <p className={`mt-5 ${ chat.sender === me._id ? 'text-right mr-3' : 'text-left ml-3'}`}>
+                            <span className={`border p-2 rounded-full ${ chat.sender === me._id ? 'bg-gray-200' : 'bg-blue-500 text-white'}`}>{chat.message}</span>
+                        </p>
+                        <p className={`mt-1 ${ chat.sender === me._id ? 'text-right mr-3' : 'text-left ml-3'}`}>
+                            <small className=''>{moment(chat.createdAt).fromNow()}</small>
+                        </p>
+                    </div>
+                    ))}
                 </div>
-            )))
-            }
+            </ScrollToBottom>
             {showEmoji &&
                 <div className='absolute bottom-16'>
                     <Picker onEmojiClick={onEmojiClick} />
                 </div>
             }
-            <div className='absolute bottom-0 my-3 border p-2 rounded-full' style={{width: '95%'}}>
+            <div className='absolute bottom-0 my-3 border p-2 rounded-full bg-white' style={{width: '95%'}}>
                 <form action="" className='flex items-center' onSubmit={handleSubmitChat}>
                     <BsEmojiSmile  className='text-xl' onClick={() => setShowEmoji(!showEmoji)}/>
                     <input type="text" value={message} onChange={(e) => setMessage(e.target.value)} placeholder='Message...' className='ml-3 focus:outline-none w-5/6'/>

@@ -4,6 +4,9 @@ import { useSelector } from 'react-redux';
 import ChatUser from '../components/ChatUser';
 import Loading from '../components/Loading';
 import CurrentChat from '../components/CurrentChat';
+import io from 'socket.io-client';
+import { toast } from 'react-toastify'
+const socket = io.connect('http://localhost:5000');
 
 const Chat = () => {
     const user = useSelector(state => state.user.user);
@@ -14,18 +17,20 @@ const Chat = () => {
 
     useEffect(() => {
         const handleFriends = async () => {
-            setLoading(false);
+            setLoading(true);
             try {
                 const { data }  = await axios.get(`/api/users/friends/${user?._id}`);
                 setFollowingUsers(data);
                 setLoading(false);
             } catch (err) {
-                console.log(err.message);
+                if(err.response) {
+                    toast.error(err.response.data.message);
+                }
                 setLoading(false);
             }
         }
         handleFriends();
-    },[user._id, setFollowingUsers, setLoading]);
+    },[user._id]);
 
     const handleOpenChat = async (name) => {
         setIsChatOpen(true);
@@ -33,9 +38,13 @@ const Chat = () => {
         try {
             const { data } = await axios.get(`/api/users/eachuser?username=${name}`);
             setChatUser(data);
+            const res = await axios.get(`/api/conversations/find/${user?._id}/${chatUser?._id}`);
+            socket.emit('join', res.data?._id);
             setLoading(false);
         } catch (err) {
-            console.log(err);
+            if(err.response) {
+                toast.error(err.response.data.message);
+            }
             setLoading(false);
         }
     }
@@ -63,9 +72,9 @@ const Chat = () => {
                 )
             }
             </div>
-            <div className="col-span-7 overflow-y-scroll relative" style={{height: '80vh'}}>
+            <div className="col-span-7 relative" style={{height: '80vh'}}>
                 {isChatOpen ? (
-                    <CurrentChat chatUser={chatUser} />
+                    <CurrentChat chatUser={chatUser} socket={socket} />
                 ): (
                     <div>
                         <img src="https://c.tenor.com/jQzK2XwJzcAAAAAM/seal-bread.gif" alt="" className='mx-auto' />

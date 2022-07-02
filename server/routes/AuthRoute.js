@@ -29,7 +29,7 @@ router.post('/login', expressAsyncHandler(async (req, res) => {
     if(!user) return res.status(400).json({message: "Email does not exists!"});
 
     const checkPassword = await bcrypt.compare(req.body.password, user.password);
-    if(!checkPassword) return res.status(400).json({message: "Password does not match!"});
+    if(!checkPassword) return res.status(400).json({message: "Incorrect password!"});
 
     res.status(200).json({
         username: user.username,

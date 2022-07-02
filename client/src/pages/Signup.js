@@ -29,7 +29,9 @@ const Signup = () => {
             console.log(data);
             navigate('/login');
         } catch (err) {
-            console.log(err.message);
+            if(err.response) {
+                toast.error(err.response.data.message);
+            }
         }
     };
 

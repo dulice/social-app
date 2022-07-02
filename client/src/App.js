@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import UserProtect from './protectedRoute/UserProtect';
 import Header from './components/header';
 import { Home, Setting, Profile, Explore, UploadPost, Suggest, Chat, Signup, Login} from './pages'
+import SearchResult from './pages/SearchResult';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path="/uploadpost" element={ <UserProtect> <UploadPost /> </UserProtect>}  />
       <Route path="/explore/people" element={ <UserProtect> <Suggest /> </UserProtect>}  />
       <Route path="/chat" element={ <UserProtect> <Chat /> </UserProtect>}  />
+      <Route path="/search" element={ <SearchResult /> }  />
         <Route path="/register" element={ <Signup />}  />
         <Route path="/login" element={ <Login />}  />
       </Routes>

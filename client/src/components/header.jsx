@@ -16,6 +16,8 @@ const Header = () => {
     const [search, setSearch] = useState('');
     const handleSubmit = (e) => {
         e.preventDefault();
+        navigate(`/search?q=${search}`);
+        setSearch('');
     }
     const handleProfileClick = () => {
         navigate(`/profile/${user.username}`);
@@ -23,8 +25,8 @@ const Header = () => {
   return (
     <div className='border-b-gray-200 border-b-2 py-3 fixed top-0 w-full bg-white nav z-10'>
         <div className="max-w-5xl mx-auto px-3">
-            <div className="grid grid-cols-12 items-baseline gap-4">
-                <div className="col-span-3 md:col-span-4 flex justify-start">Instagram</div>
+            <div className="grid grid-cols-12 gap-4">
+                <div className="col-span-3 md:col-span-4 flex justify-start font-mono font-bold text-xl">Instagram</div>
                 <div className="col-span-6 md:col-span-4 hidden md:flex md:justify-end">
                     <form onSubmit={handleSubmit}>
                         <div className="relative">

@@ -15,6 +15,10 @@ const SuggestUser = ({user, suggest, following, follower}) => {
             await axios.put(`/api/users/${currentUser._id}/follow`, {
                 userId: id
             });
+            await axios.post(`/api/conversations`, {
+                sender: currentUser._id,
+                reciever: id
+            });
             const { data } = await axios.get(`/api/users/eachuser?username=${currentUser.username}`);
             dispatch(userAction.register(data)); 
             localStorage.setItem('user', JSON.stringify(data));      

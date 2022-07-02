@@ -3,7 +3,7 @@ const ChatUser = ({user, handleOpenChat}) => {
 
   return (
     <div className="flex justify-between items-center" key={user._id}>
-        <div className="flex items-center mt-3 cursor-pointer" onClick={() => handleOpenChat(user.username)}>
+        <div className="flex items-center mt-3 cursor-pointer" onClick={() => handleOpenChat(user.username, user._id)}>
             {user.profilePicture ? (
                 <img className='mr-4 w-7 h-7 object-cover rounded-full' src={user.profilePicture} alt="" />
             ): (
