@@ -6,7 +6,6 @@ const userRoute = require("./routes/UserRoute");
 const authRoute = require("./routes/AuthRoute");
 const postRoute = require("./routes/PostRoute");
 const imageRoute = require("./routes/imageRoute");
-const chatRoute = require("./routes/chatRoute");
 const conversationRoute = require("./routes/ConversationRoute");
 const messageRoute = require("./routes/MessagesRoute");
 const { createServer } = require('http');
@@ -39,7 +38,6 @@ app.use("/api/upload", imageRoute);
 app.use("/api/user", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
-app.use("/api/chats", chatRoute);
 app.use("/api/conversations", conversationRoute);
 app.use("/api/messages", messageRoute);
 

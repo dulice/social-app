@@ -13,21 +13,10 @@ const Suggestion = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);    
 
-    const isEqual = (a,b) => JSON.stringify(a) === JSON.stringify(b);
     useEffect(() => {
         setLoading(true);
         const fetchUsers = async () => {
-            // const { data } = isEqual(user.followers, user.followings) ? (
-            //     await axios.get(`/api/users/tofollow?username=${user?.username}`)
-            // ) : user?.followers.length > 0 ? (
-            //     await axios.get(`/api/users/suggest?username=${user?.username}`)
-            // ) : user?.followings.length > 0 ? (
-            //     await axios.get(`/api/users/tofollow?username=${user?.username}`)
-            // ) : (
-            //     await axios.get(`/api/users`)
-            // )
-            const { data } = await axios.get(`/api/users/tofollow?username=${user?.username}`);
-            
+            const { data } = await axios.get(`/api/users/tofollow?username=${user?.username}`);          
             setUsers(data);
             setLoading(false);
         };
