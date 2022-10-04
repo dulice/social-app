@@ -3,16 +3,18 @@ import { IoMdCompass, IoMdHeart } from 'react-icons/io'
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Menu, Transition } from '@headlessui/react'
-import { Fragment, useState } from 'react'
+import { Fragment, useContext, useState } from 'react'
 import { FaUser } from 'react-icons/fa';
 import { AiOutlineSetting } from 'react-icons/ai';
 import { FiSend } from 'react-icons/fi'
 import { userAction } from '../redux/userSlice';
+import { socket, Store } from '../context/appContext';
 
 const Header = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const user = useSelector(state => state.user.user);
+    const { setFriends } = useContext(Store);
     const [search, setSearch] = useState('');
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -21,6 +23,13 @@ const Header = () => {
     }
     const handleProfileClick = () => {
         navigate(`/profile/${user.username}`);
+    }
+
+    const handleChat = () => {
+        socket.emit("friends", user._id);
+        socket.on("friends", (friend) => {
+            setFriends(friend);
+        });
     }
   return (
     <div className='border-b-gray-200 border-b-2 py-3 fixed top-0 w-full bg-white nav z-10'>
@@ -47,7 +56,7 @@ const Header = () => {
                     <NavLink  className="inline-block ml-3 text-2xl" to="/">
                         <MdHome />
                     </NavLink>
-                    <NavLink className="inline-block ml-3 text-2xl" to="/chat">
+                    <NavLink className="inline-block ml-3 text-2xl" to="/chat" onClick={handleChat}>
                         <FiSend />
                     </NavLink>
                     <NavLink className="inline-block ml-3 text-2xl" to="/uploadpost">

@@ -8,15 +8,18 @@ import store from './redux/store';
 import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import StoreProvider from './context/appContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
-        <App />
-        <ToastContainer limit={1} position="bottom-center" />
-      </BrowserRouter>
+      <StoreProvider>
+        <BrowserRouter>
+          <App />
+          <ToastContainer limit={1} position="bottom-center" />
+        </BrowserRouter>
+      </StoreProvider>
     </Provider>
   </React.StrictMode>
 );

@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { userAction } from '../redux/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { socket } from '../context/appContext';
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -24,6 +25,7 @@ const Login = () => {
             const { data: userData } = await axios.get(`/api/users/eachuser?username=${data.username}`);
             dispatch(userAction.register(userData));
             localStorage.setItem('user', JSON.stringify(userData));
+            socket.emit('friends', userData._id);
             navigate('/');
         } catch (err) {
             if(err.response) {

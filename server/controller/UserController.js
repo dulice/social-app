@@ -58,7 +58,7 @@ const eachUser = expressAsyncHandler ( async (req, res) => {
     res.status(200).json(others);
 });
 
-//get folling user
+//get following user
 const followingUser = expressAsyncHandler( async (req, res) => {
     const user = await User.findById(req.params.userId);
     const friends = await Promise.all(

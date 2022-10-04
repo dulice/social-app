@@ -10,14 +10,14 @@ function App() {
     <div className="App">
       <Header />
       <Routes>
-      <Route path="/" element={ <UserProtect> <Home /> </UserProtect>}  />
-      <Route path="/accounts/edit" element={ <UserProtect> <Setting /> </UserProtect>}  />
-      <Route path="/profile/:username" element={ <UserProtect> <Profile /> </UserProtect>}  />
-      <Route path="/explore" element={ <UserProtect> <Explore /> </UserProtect>}  />
-      <Route path="/uploadpost" element={ <UserProtect> <UploadPost /> </UserProtect>}  />
-      <Route path="/explore/people" element={ <UserProtect> <Suggest /> </UserProtect>}  />
-      <Route path="/chat" element={ <UserProtect> <Chat /> </UserProtect>}  />
-      <Route path="/search" element={ <SearchResult /> }  />
+        <Route path="/" element={ <UserProtect> <Home /> </UserProtect>}  />
+        <Route path="/accounts/edit" element={ <UserProtect> <Setting /> </UserProtect>}  />
+        <Route path="/profile/:username" element={ <UserProtect> <Profile /> </UserProtect>}  />
+        <Route path="/explore" element={ <UserProtect> <Explore /> </UserProtect>}  />
+        <Route path="/uploadpost" element={ <UserProtect> <UploadPost /> </UserProtect>}  />
+        <Route path="/explore/people" element={ <UserProtect> <Suggest /> </UserProtect>}  />
+        <Route path="/chat" element={ <UserProtect> <Chat /> </UserProtect>}  />
+        <Route path="/search" element={ <SearchResult /> }  />
         <Route path="/register" element={ <Signup />}  />
         <Route path="/login" element={ <Login />}  />
       </Routes>
