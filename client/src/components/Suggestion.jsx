@@ -44,7 +44,7 @@ const Suggestion = () => {
                     </Link>
                 </div>
                 <div className="users">
-                    {filterUser.slice(0,5).map(user => (
+                    {loading ? <Loading /> : filterUser.slice(0,5).map(user => (
                         <div key={user._id}>
                             <SuggestUser user={user} />
                         </div>

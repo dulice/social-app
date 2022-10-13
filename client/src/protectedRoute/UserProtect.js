@@ -1,10 +1,10 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-import Login from '../pages/Login';
+import { Navigate } from 'react-router-dom';
 
 const UserProtect = ({children}) => {
     const user = useSelector(state => state.user.user);
-  return ( user ? children : <Login /> )
+  return ( user ? children : <Navigate to="/login" /> )
 }
 
 export default UserProtect;

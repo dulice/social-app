@@ -1,12 +1,11 @@
 import axios from 'axios';
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { userAction } from '../redux/userSlice';
+import { toast } from 'react-toastify';
 
-const SuggestUser = ({user, suggest, following, follower}) => {
+const SuggestUser = ({user, suggest, following, follower, username}) => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
     const currentUser = useSelector(state => state.user.user);
     const [follow, setFollow] = useState(false);
 
@@ -15,25 +14,23 @@ const SuggestUser = ({user, suggest, following, follower}) => {
             await axios.put(`/api/users/${currentUser._id}/follow`, {
                 userId: id
             });
-            const { data } = await axios.get(`/api/users/eachuser?username=${currentUser.username}`);
-            dispatch(userAction.register(data)); 
-            localStorage.setItem('user', JSON.stringify(data));      
             setFollow(true);
         } catch (err) {
             if(err.response) {
-                console.log(err.response.data.message);
+                toast.error(err.response.data);
             }
         }
     };
 
-    const handleUnfollow = async (id) => {
-        await axios.put(`/api/users/${currentUser._id}/unfollow`, {
-            userId: id
-        });
-        const { data } = await axios.get(`/api/users/eachuser?username=${currentUser.username}`);
-        dispatch(userAction.register(data)); 
-        localStorage.setItem('user', JSON.stringify(data));
-        setFollow(false);
+    const handleUnFollow = async (id) => {
+        try {
+            await axios.put(`/api/users/${currentUser._id}/unfollow`, {
+                userId: id
+            });
+            setFollow(false);
+        } catch (err){
+            toast.error(err.response.data);
+        }
     }
 
   return (
@@ -47,15 +44,15 @@ const SuggestUser = ({user, suggest, following, follower}) => {
             <span className='font-medium text-sm  hover:underline '>{user.username}</span>
         </div>
         <div className="">
-            {follow ? (
-                <button onClick={() => handleUnfollow(user._id)} className={`text-blue-600 font-medium text-sm ${suggest && 'bg-blue-500 text-white p-2 font-normal rounded-md mb-3'}`}>Following</button>
-            ) : following ? (
-                <button onClick={() => handleUnfollow(user._id)} className={`text-gray-600 rounded-md p-2 border font-medium text-sm `}>Following</button>
-            ) : follower ? (
-                <button onClick={() => handleUnfollow(user._id)} className={`text-gray-600 rounded-md p-2 border font-medium text-sm `}>Remove</button>
-            ) : (
-                <button onClick={() => handleFollow(user._id)} className={`text-blue-600 font-medium text-sm ${suggest && 'bg-blue-500 !text-white p-2 font-normal rounded-md mb-3'}`}>Follow</button>
-            )}                            
+                {follow ? (
+                    <button onClick={() => handleUnFollow(user._id)} className={`text-blue-600 font-medium text-sm ${suggest && 'bg-blue-500 text-white p-2 font-normal rounded-md mb-3'}`}>Following</button>
+                ) : following ? (
+                    <button onClick={() => handleUnFollow(user._id)} className={`text-gray-600 rounded-md p-2 border font-medium text-sm `}>Following</button>
+                ) : follower ? (
+                    <button onClick={() => handleUnFollow(user._id)} className={`text-gray-600 rounded-md p-2 border font-medium text-sm `}>{currentUser.username === username && "Remove"}</button>
+                ) : (
+                    <button onClick={() => handleFollow(user._id)} className={`text-blue-600 font-medium text-sm ${suggest && 'bg-blue-500 !text-white p-2 font-normal rounded-md mb-3'}`}>Follow</button>
+                )}
         </div>
     </div>
   )

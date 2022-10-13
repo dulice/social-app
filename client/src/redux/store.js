@@ -1,16 +1,18 @@
 import { configureStore } from "@reduxjs/toolkit"
+import { userApi } from "../api/userApi";
 import chatUserSlice from "./chatUser";
-import timelineSlice from "./timelineSlice";
-import { userApi } from "./userApi";
+import postSlice from "./postSlice";
 import userSlice from "./userSlice"
 
 const store = configureStore({
     reducer: {
         user: userSlice.reducer,
-        timelinePosts: timelineSlice.reducer,
         chatUser: chatUserSlice.reducer,
+        post: postSlice.reducer,
         [userApi.reducerPath]: userApi.reducer
-    }
+    },
+    middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(userApi.middleware),
 });
 
 export default store;

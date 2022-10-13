@@ -100,12 +100,12 @@ const followUser = expressAsyncHandler (async (req, res) => {
         if(!user.followers.includes(req.body.userId) || !user.followings.includes(req.body.userId)) {
             await user.updateOne({$push: {followings: req.body.userId}});
             await currentUser.updateOne({$push: {followers: req.params.id}}); 
-            res.status(200).json("user has been follow");
+            res.status(200).json({message: "user has been follow"});
         } else {
-            res.status(403).json("you already follow this user.")
+            res.status(403).json({message: "you already follow this user."})
         }
     } else {
-        res.status(500).json("you cannot follow your self.");
+        res.status(500).json({message: "you cannot follow your self."});
     }
 });
 
@@ -114,12 +114,12 @@ const unfollowUser = expressAsyncHandler(async (req, res) => {
     if(req.body.userId !== req.params.id) {
         const user = await User.findById(req.params.id);
         const currentUser = await User.findById(req.body.userId);
-        if(!user.followers.includes(req.body.userId) || !user.followings.includes(req.body.userId)) {
+        if(user.followers.includes(req.body.userId) || user.followings.includes(req.body.userId)) {
             await user.updateOne({$pull: {followings: req.body.userId}});
             await currentUser.updateOne({$pull: {followers: req.params.id}}); 
             res.status(200).json({message: "user has been unfollow."});
         } else {
-            res.status(403).json("you already unfollow this user.")
+            res.status(403).json({message: "you already unfollow this user."})
         }
     } else {
         res.status(400).json({message: "you cannot unfollow yourself."})

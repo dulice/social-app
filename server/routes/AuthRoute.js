@@ -26,17 +26,12 @@ router.post('/register', expressAsyncHandler(async (req, res) => {
 
 router.post('/login', expressAsyncHandler(async (req, res) => {
     const user = await User.findOne({email: req.body.email});
-    if(!user) return res.status(400).json({message: "Email does not exists!"});
+    if(!user) return res.status(400).json({message: "Wrong Credentials."});
 
     const checkPassword = await bcrypt.compare(req.body.password, user.password);
-    if(!checkPassword) return res.status(400).json({message: "Incorrect password!"});
+    if(!checkPassword) return res.status(400).json({message: "Wrong Credentials!"});
 
-    res.status(200).json({
-        username: user.username,
-        email: user.email,
-        isAdmin: user.isAdmin,
-        token: generateToken(user),
-    });
+    res.status(200).json(user);
 }));
 
 module.exports = router;

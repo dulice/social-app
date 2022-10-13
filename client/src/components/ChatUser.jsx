@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 import { socket, Store } from "../context/appContext";
 
 const ChatUser = () => {
@@ -50,6 +51,7 @@ const ChatUser = () => {
         </div>
         <hr />
         <div className="m-5">
+          {friends.length < 1 && <Link to="/" className="text-blue-600">Follow User to Start Conversation.</Link>}
           {friends?.map((member) => (
             <div className="" key={member._id}>
               <div

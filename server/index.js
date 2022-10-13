@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const path = require('path');
 const userRoute = require("./routes/UserRoute");
 const authRoute = require("./routes/AuthRoute");
 const postRoute = require("./routes/PostRoute");
@@ -11,6 +12,7 @@ const { createServer } = require('http');
 const { Server } = require('socket.io');
 const User = require("./models/UserModel");
 const Message = require("./models/MessagesModel");
+const Post = require("./models/PostModel");
 
 dotenv.config();
 
@@ -85,10 +87,26 @@ io.on('connection', (socket) => {
         await newMessage.save();
         const roomId = await conversationMessage(conversationId);
         io.to(conversationId).emit("room-messages", roomId);
+    });
+
+    socket.on("like", async(postId, userId) => {
+        const post = await Post.findById(postId);
+        if(!post.likes.includes(userId)) {
+            await post.updateOne({ $push: {likes: userId}});
+        } else {
+            await post.updateOne({ $pull: {likes: userId}});
+        }    
+        io.emit("likeUnlike", post);  
     })
 })
 
 http.listen(server);
+
+const __variableOfChoice = path.resolve()
+app.use(express.static(path.join(__variableOfChoice, '/client/build')));
+app.get("*", (req,res) => {
+    res.sendFile(path.join(__variableOfChoice, '/client/build/index.html'));
+})
 
 app.use((err, req, res, next) => {
     res.status(500).json({message: err.message});
