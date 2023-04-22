@@ -19,8 +19,8 @@ const Posts = () => {
       try {
         const { data } =
           user?.followings.length > 0
-            ? await axios.get(`/api/posts/timeline/${user?._id}`)
-            : await axios.get("/api/posts");
+            ? await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/timeline/${user?._id}`)
+            : await axios.get(`${process.env.REACT_APP_API_URL}/api/posts`);
         setPost(data);
         dispatch(postAction.fetchPost(data));
         setLoading(false);

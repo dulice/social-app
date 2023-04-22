@@ -30,8 +30,8 @@ const UploadPost = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data : imageData } = await axios.post('/api/upload/postimage', {image});
-            await axios.post('/api/posts', {
+            const { data : imageData } = await axios.post(`${process.env.REACT_APP_API_URL}/api/upload/postimage`, {image});
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/posts`, {
                 userId: user._id,
                 image: imageData,
                 description,

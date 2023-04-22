@@ -24,7 +24,7 @@ const Profile = () => {
   const fetchUser = useCallback(() => {
     const User = async () => {
       const { data } = await axios.get(
-          `/api/users/eachuser?username=${username}`
+          `${process.env.REACT_APP_API_URL}/api/users/eachuser?username=${username}`
         );
         setUser(data);
     }
@@ -35,7 +35,7 @@ const Profile = () => {
     setLoading(true);
     const fetchPosts = async () => {
       try {
-        const { data } = await axios.get(`/api/posts/post/${username}`);
+        const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/post/${username}`);
         setPosts(data.posts);
         setCount(data.countPosts);
         setLoading(false);
@@ -64,7 +64,7 @@ const Profile = () => {
   const handleFollowing = async () => {
     setIsfollowing(true);
     try {
-      const { data } = await axios.get(`/api/users/friends/${user?._id}`);
+      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/friends/${user?._id}`);
       setFollowingUsers(data);
       await fetchUser();
     } catch (err) {
@@ -75,7 +75,7 @@ const Profile = () => {
   const handleFollowers = async () => {
     setIsfollower(true);
     try {
-      const { data } = await axios.get(`/api/users/follower/${user?._id}`);
+      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/follower/${user?._id}`);
       setFollowerUsers(data);
       await fetchUser();
     } catch (err) {

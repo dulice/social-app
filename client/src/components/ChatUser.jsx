@@ -38,7 +38,7 @@ const ChatUser = () => {
     //     setFriends(friend);
     // });
     const fetchFollowingsUser = async () => {
-      const { data } = await axios.get(`/api/users/friends/${user._id}`);
+      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/friends/${user._id}`);
       setFriends(data);
     };
     fetchFollowingsUser();

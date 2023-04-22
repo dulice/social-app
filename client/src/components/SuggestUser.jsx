@@ -12,7 +12,7 @@ const SuggestUser = ({user, suggest, following, follower, username}) => {
 
     const handleFollow = async (id) => {
         try {
-            await axios.put(`/api/users/${currentUser._id}/follow`, {
+            await axios.put(`${process.env.REACT_APP_API_URL}/api/users/${currentUser._id}/follow`, {
                 userId: id
             });
             setFollow(true);
@@ -25,7 +25,7 @@ const SuggestUser = ({user, suggest, following, follower, username}) => {
 
     const handleUnFollow = async (id) => {
         try {
-            await axios.put(`/api/users/${currentUser._id}/unfollow`, {
+            await axios.put(`${process.env.REACT_APP_API_URL}/api/users/${currentUser._id}/unfollow`, {
                 userId: id
             });
             setFollow(false);

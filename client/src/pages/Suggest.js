@@ -12,11 +12,10 @@ const Suggest = () => {
     const [loading, setLoading] = useState(false);    
     const suggest = true;
 
-    const isEqual = (a,b) => JSON.stringify(a) === JSON.stringify(b);
     useEffect(() => {
         setLoading(true);
         const fetchUsers = async () => {
-            const { data } = await axios.get(`/api/users/tofollow?username=${user?.username}`);            
+            const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/tofollow?username=${user?.username}`);            
             setUsers(data);
             setLoading(false);
         };

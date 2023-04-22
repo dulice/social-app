@@ -21,7 +21,7 @@ const LikeComment = ({ post }) => {
     if (post.likes.includes(user._id)) {
       setLike(true);
     }
-  }, []);
+  }, [user._id, post.likes]);
 
   const handleLike = (id) => {
     setLike(!like);
@@ -45,7 +45,7 @@ const LikeComment = ({ post }) => {
     dispatch(postAction.showModal(true));
     dispatch(postAction.singlePost(post));
     try {
-      const { data } = await axios.get(`/api/posts/${id}`);
+      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/${id}`);
       dispatch(postAction.commentsPost(data.comments));
       setLoading(false);
     } catch (err) {
@@ -56,7 +56,7 @@ const LikeComment = ({ post }) => {
 
   const handleComment = async (id) => {
     try {
-      const { data } = await axios.put(`/api/posts/comment/${id}`, {
+      const { data } = await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/comment/${id}`, {
         username: user.username,
         profilePicture: user.profilePicture,
         comment,

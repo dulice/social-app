@@ -13,7 +13,7 @@ const Explore = () => {
         setLoading(true);
         const fetchPosts = async () => {
             try {
-                const { data } = await axios.get('/api/posts');
+                const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts`);
                 setPost(data);
                 setLoading(false);
             } catch (err) {

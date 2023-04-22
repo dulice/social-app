@@ -37,9 +37,9 @@ const Setting = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const { data: image } = await axios.post('/api/upload', {profilePicture});
+            const { data: image } = await axios.post(`${process.env.REACT_APP_API_URL}/api/upload`, {profilePicture});
             // console.log(image);
-            await axios.put(`/api/users/${user._id}`, {
+            await axios.put(`${process.env.REACT_APP_API_URL}/api/users/${user._id}`, {
                 userId: user._id,
                 username,
                 bio,
@@ -49,7 +49,7 @@ const Setting = () => {
                 currentTown,
                 profilePicture: image,
             });
-            const { data } = await axios.get(`/api/users/eachuser?userId=${user._id}`);
+            const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/eachuser?userId=${user._id}`);
             setLoading(false);
             dispatch(userAction.register(data));
             localStorage.setItem('user', JSON.stringify(data));

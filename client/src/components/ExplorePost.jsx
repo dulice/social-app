@@ -14,7 +14,7 @@ const ExplorePost = ({ post }) => {
     dispatch(postAction.showModal(true));
     dispatch(postAction.singlePost(post));
     try {
-      const { data } = await axios.get(`/api/posts/${id}`);
+      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/${id}`);
       dispatch(postAction.commentsPost(data.comments));
       setLoading(false);
     } catch (err) {

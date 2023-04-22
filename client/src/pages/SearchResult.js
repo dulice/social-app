@@ -15,7 +15,7 @@ const SearchResult = () => {
         const fetchPost = async () => {
             setLoading(true);
             try {
-                const { data } = await axios.get('/api/posts');
+                const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts`);
                 setPosts(data);
                 setLoading(false);
             } catch (err) {
