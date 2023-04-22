@@ -50,6 +50,7 @@ const Login = () => {
                 </div>
                 <p>Haven't had an account yet? <Link to="/register" className='text-blue-600 underline'>Signup Here.</Link></p>
             </form>
+            <p className='text-gray-500'>Username: user@example.com, Pass: @12345</p>
         </div>
     </div>
   )

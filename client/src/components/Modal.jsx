@@ -4,9 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import LikeComment from "./postComponents/LikeComment";
 import { postAction } from "../redux/postSlice";
 import Users from "./postComponents/Users";
-import axios from "axios";
-import { useState } from "react";
 import Loading from "./Loading";
+import DefaultUser from '../assets/default_user.jpg';
 
 const Modal = ({loading}) => {
   const dispatch = useDispatch();
@@ -47,7 +46,7 @@ const Modal = ({loading}) => {
                     ) : (
                       <img
                         className="mr-3 w-8 h-8 object-cover rounded-full"
-                        src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
+                        src={DefaultUser}
                         alt=""
                       />
                     )}

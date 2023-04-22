@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import DefaultUser from '../assets/default_user.jpg';
 
 const SuggestUser = ({user, suggest, following, follower, username}) => {
     const navigate = useNavigate();
@@ -39,7 +40,7 @@ const SuggestUser = ({user, suggest, following, follower, username}) => {
             {user.profilePicture ? (
                 <img className='mr-4 w-7 h-7 object-cover rounded-full' src={user.profilePicture} alt="" />
             ): (
-                <img className='mr-4 w-7 h-7 object-cover rounded-full' src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" alt="" />
+                <img className='mr-4 w-7 h-7 object-cover rounded-full' src={DefaultUser} alt="" />
             )}
             <span className='font-medium text-sm  hover:underline '>{user.username}</span>
         </div>

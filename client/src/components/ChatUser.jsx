@@ -3,6 +3,7 @@ import React, { useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { socket, Store } from "../context/appContext";
+import DefaultUser from '../assets/default_user.jpg';
 
 const ChatUser = () => {
   const user = useSelector((state) => state.user.user);
@@ -75,7 +76,7 @@ const ChatUser = () => {
                   ) : (
                     <img
                       className="mr-4 w-7 h-7 object-cover rounded-full"
-                      src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
+                      src={DefaultUser}
                       alt=""
                     />
                   )}

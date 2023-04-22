@@ -20,7 +20,7 @@ const app = express();
 const http = createServer(app);
 const io = new Server(http, {
     cors: {
-        origin: "http://localhost:3000"
+        origin: "*"
     }
 });
 
@@ -29,12 +29,12 @@ app.use(express.urlencoded({extended: true, limit: '50mb'}));
 app.use(express.json({limit: '50mb'}));
 app.use(cors());
 
-mongoose.connect(process.env.DB_CONNECT)
+mongoose.connect(process.env.MONGODB_URL)
     .then(() => {
         console.log('connect to db');
     })
     .catch((err) => {
-        console.log(err.message)
+        console.error(err.message)
     });
 
 app.use("/api/upload", imageRoute);

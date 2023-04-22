@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import Loading from "../components/Loading";
 import { useParams } from "react-router-dom";
 import ExplorePost from "../components/ExplorePost";
 import SuggestUser from "../components/SuggestUser";
 import { HiX } from "react-icons/hi";
+import DefaultUser from '../assets/default_user.jpg';
 
 const Profile = () => {
   const { username } = useParams();
@@ -20,12 +21,15 @@ const Profile = () => {
   let following = true;
   let follower = true;
 
-  const fetchUser = async () => {
-    const { data } = await axios.get(
-        `/api/users/eachuser?username=${username}`
-      );
-      setUser(data);
-  }
+  const fetchUser = useCallback(() => {
+    const User = async () => {
+      const { data } = await axios.get(
+          `/api/users/eachuser?username=${username}`
+        );
+        setUser(data);
+    }
+    User();
+  },[username]) ;
   
   useEffect(() => {
     setLoading(true);
@@ -55,7 +59,7 @@ const Profile = () => {
       }
     };
     User();
-  }, [username]);
+  }, [fetchUser]);
 
   const handleFollowing = async () => {
     setIsfollowing(true);
@@ -95,7 +99,7 @@ const Profile = () => {
             ) : (
               <img
                 className="mx-auto md:mx-0 w-32 h-32 object-cover rounded-full"
-                src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png"
+                src={DefaultUser}
                 alt=""
               />
             )}

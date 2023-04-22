@@ -7,6 +7,7 @@ import ScrollToBottom from 'react-scroll-to-bottom';
 import moment from 'moment';
 import { socket, Store } from '../context/appContext';
 import { useContext } from 'react';
+import DefaultUser from '../assets/default_user.jpg';
 
 const CurrentChat = () => {
     const user = useSelector(state => state.user.user);
@@ -38,7 +39,7 @@ const CurrentChat = () => {
                 {currentUser.profilePicture ? (
                     <img className='mr-4 w-7 h-7 object-cover rounded-full' src={currentUser.profilePicture} alt="" />
                 ): (
-                    <img className='mr-4 w-7 h-7 object-cover rounded-full' src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" alt="" />
+                    <img className='mr-4 w-7 h-7 object-cover rounded-full' src={DefaultUser} alt="" />
                 )}
                 <span className='font-medium text-sm '>{currentUser.username}</span>
             </div>

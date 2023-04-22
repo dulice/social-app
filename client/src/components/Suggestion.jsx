@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Loading from './Loading';
 import SuggestUser from './SuggestUser';
+import DefaultUser from '../assets/default_user.jpg';
 
 const Suggestion = () => {
     const navigate = useNavigate();
@@ -32,7 +33,7 @@ const Suggestion = () => {
                 {user.profilePicture ? (
                     <img className='mr-4 w-8 h-8 object-cover rounded-full' src={user.profilePicture} alt="" />
                 ): (
-                    <img className='mr-4 w-8 h-8 object-cover rounded-full' src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" alt="" />
+                    <img className='mr-4 w-8 h-8 object-cover rounded-full' src={DefaultUser} alt="" />
                 )}
                 <span className='font-medium'>{user.username}</span>
             </div>

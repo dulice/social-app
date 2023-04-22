@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { toast } from 'react-toastify'
 import { userAction } from '../redux/userSlice';
+import DefaultUser from '../assets/default_user.jpg';
 
 const Setting = () => {
     const dispatch = useDispatch();
@@ -72,7 +73,7 @@ const Setting = () => {
                 ) : user.profilePicture ? (
                     <img className='mx-auto w-28 h-28 object-cover rounded-full' src={user.profilePicture} alt="" />
                 ): (
-                    <img className='mx-auto w-28 h-28 object-cover rounded-full' src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" alt="" />
+                    <img className='mx-auto w-28 h-28 object-cover rounded-full' src={DefaultUser} alt="" />
                 )}
             </label>
             <input onChange={handleChangeImage} type="file" accept='image/jpg, image/jpeg, image/png, image/svg, image/gif' id='profile' name='profilePicture' className='p-2 text-sm mx-3 mb-3 col-span-4 md:col-span-3 hidden' />

@@ -9,6 +9,7 @@ import { AiOutlineSetting } from 'react-icons/ai';
 import { FiSend } from 'react-icons/fi'
 import { userAction } from '../redux/userSlice';
 import { socket, Store } from '../context/appContext';
+import DefaultUser from '../assets/default_user.jpg';
 
 const Header = () => {
     const navigate = useNavigate();
@@ -41,7 +42,7 @@ const Header = () => {
     <div className='border-b-gray-200 border-b-2 py-3 fixed top-0 w-full bg-white nav z-10'>
         <div className="max-w-5xl mx-auto px-3">
             <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-3 md:col-span-4 flex justify-start font-mono font-bold text-xl">Instagram</div>
+                <div className="col-span-3 md:col-span-4 flex justify-start font-mono font-bold text-xl text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500">Social-Hub</div>
                 <div className="col-span-6 md:col-span-4 hidden md:flex md:justify-end">
                     <form onSubmit={handleSubmit}>
                         <div className="relative">
@@ -82,7 +83,7 @@ const Header = () => {
                                 {user && user.profilePicture ? (
                                     <img className='mx-3 w-7 h-7 object-cover rounded-full' src={user.profilePicture} alt="" />
                                 ): (
-                                    <img className='mx-3 w-7 h-7 object-cover rounded-full' src="https://www.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png" alt="" />
+                                    <img className='mx-3 w-7 h-7 object-cover rounded-full' src={DefaultUser} alt="" />
                                 )}
                             </Menu.Button>
                             </div>
