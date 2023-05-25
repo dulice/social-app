@@ -103,9 +103,9 @@ io.on('connection', (socket) => {
 http.listen(server);
 
 const __variableOfChoice = path.resolve()
-app.use(express.static(path.join(__variableOfChoice, '/client/build')));
+app.use(express.static(path.join(__variableOfChoice, '../client/build')));
 app.get("*", (req,res) => {
-    res.sendFile(path.join(__variableOfChoice, '/client/build/index.html'));
+    res.sendFile(path.join(__variableOfChoice, '../client/build/index.html'));
 })
 
 app.use((err, req, res, next) => {

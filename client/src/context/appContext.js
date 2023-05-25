@@ -2,7 +2,7 @@ import { createContext, useState } from "react";
 import { io } from "socket.io-client";
 
 export const Store = createContext();
-export const socket = io();
+export const socket = io(process.env.REACT_APP_API_URL);
 
 const StoreProvider = ({ children }) => {
     const [friends, setFriends] = useState([]);
