@@ -18,7 +18,7 @@ const Posts = () => {
       setLoading(true);
       try {
         const { data } =
-          user?.followings.length > 0
+          user?.followings.length > 1
             ? await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/timeline/${user?._id}`)
             : await axios.get(`${process.env.REACT_APP_API_URL}/api/posts`);
         setPost(data);

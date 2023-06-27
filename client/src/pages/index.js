@@ -1,11 +1,12 @@
-import Chat from "./Chat";
-import Explore from "./Explore";
-import Home from "./Home";
-import Login from "./Login";
-import Profile from "./Profile";
-import Setting from "./Setting";
-import Suggest from "./Suggest";
-import Signup from "./Signup";
-import UploadPost from "./UploadPost";
-
-export { Chat, Explore, Home, Login, Profile, Setting, Suggest, Signup, UploadPost }
+export {default as Chat} from "./Chat";
+export {default as Explore} from "./Explore";
+export {default as Home} from "./Home";
+export {default as Login} from "./Login";
+export {default as Profile} from "./Profile";
+export {default as Setting} from "./Setting";
+export {default as Suggest} from "./Suggest";
+export {default as Signup} from "./Signup";
+export {default as UploadPost} from "./UploadPost";
+export {default as SearchResult} from "./SearchResult";
+export {default as Error} from "./Error";
+export {default as Activity} from "./Activity";

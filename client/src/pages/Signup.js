@@ -18,6 +18,9 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if(username === "" || email === "" || password === "") {
+            return toast.error("Please fill all the fields.")
+        }
         try {
             if(password !== confirmPassword) return toast.error("Password do not match");
             const { data } = await register({username, email, password}).unwrap();

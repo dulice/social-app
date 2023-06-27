@@ -34,4 +34,24 @@ router.post('/login', expressAsyncHandler(async (req, res) => {
     res.status(200).json(user);
 }));
 
+router.post('/auth/google', expressAsyncHandler(async (req, res) => {
+    const { username, email } = req.body
+    const emailExist = await User.findOne({email});
+    if(emailExist) {
+        return res.status(200).json(emailExist);
+    } else {
+        const user = new User({
+            username,
+            email,
+        });
+        await user.save();
+        res.status(200).json({
+            _id: user.id,
+            username: user.username,
+            email: user.email,
+            token: generateToken(user),
+        });
+    }
+}));
+
 module.exports = router;

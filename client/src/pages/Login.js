@@ -5,7 +5,9 @@ import { userAction } from '../redux/userSlice';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { socket } from '../context/appContext';
-import { useLoginMutation } from '../api/userApi';
+import { useGoogleLoginMutation, useLoginMutation } from '../api/userApi';
+import { clientId } from '../App';
+import { GoogleLogin } from 'react-google-login'
 
 const Login = () => {
     const dispatch = useDispatch();
@@ -13,9 +15,13 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [login, {isLoading}] = useLoginMutation();
+    const [googleLogin] = useGoogleLoginMutation();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if(email === "" || password === "") {
+            return toast.error("Please fill all the fields.")
+        }
         try {
             const data = await login({email, password}).unwrap();
             dispatch(userAction.register(data));
@@ -26,6 +32,19 @@ const Login = () => {
             toast.error(err.data.message);
         }
     };
+
+    const googleResponse = async (res) => {
+        const userData = await res.profileObj;
+        const data= await googleLogin({username: userData.name, email: userData.email}).unwrap();
+        dispatch(userAction.register(data));
+        localStorage.setItem('user', JSON.stringify(data));
+        socket.emit('friends', data._id);
+        navigate('/');
+    }
+
+    const handleFailure = () => {
+        console.log("Error while login")
+    }
 
   return (
     <div className='min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'>
@@ -47,6 +66,10 @@ const Login = () => {
                     <button type="submit" className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gradient-to-r from-purple-500 via-pink-500 to-yellow-500 hover:from-purple-600 hover:via-pink-600 hover:to-yellow-600 focus:from-purple-400 focus:via-pink-400 focus:to-yellow-400 duration-300">
                         {isLoading ? "Logging In" : "Login" }
                     </button>
+                </div>
+                <div>
+                    <p className='text-center'>OR</p>
+                    <GoogleLogin className='font-bold' clientId={clientId} onSuccess={googleResponse} onFailure={handleFailure} cookiePolicy={'single_host_origin'} />
                 </div>
                 <p>Haven't had an account yet? <Link to="/register" className='text-blue-600 underline'>Signup Here.</Link></p>
             </form>
