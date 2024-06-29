@@ -56,20 +56,6 @@ const conversationMessage = async(conversationId) => {
 }
 
 io.on('connection', (socket) => {
-    socket.on("friends", async(id) => {
-        const user = await User.findById(id);
-        const friends = await Promise.all(
-            user?.followings.map(friendId => {
-                return User.findById(friendId);
-            })
-        );
-        let friendList = [];
-        friends.map((friend) => {
-            const { _id, username, profilePicture } = friend;
-            friendList.push({_id, username, profilePicture});
-        });
-        io.emit("friends", friendList);
-    })
 
     socket.on('join', async(newRoom, previousRoom) => {
         socket.join(newRoom);

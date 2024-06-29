@@ -22,6 +22,10 @@ const UserSchema = new mongoose.Schema({
     },
     profilePicture: {
         type: String,
+        default: "",
+    },
+    publicId: {
+        type: String,
     },
     bio: {
         type: String,
@@ -35,18 +39,14 @@ const UserSchema = new mongoose.Schema({
         type: String,
         default: '',
     },
-    followers: {
-        type: Array,
-        default: [],
-    },
-    followings: {
-        type: Array,
-        default: [],
-    },
-    isAdmin: {
-        type: Boolean,
-        default: false
-    },
+    followers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }],
+    followings: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }],    
     relationship: {
         type: Number,
         enum: [1, 2, 3, 4]

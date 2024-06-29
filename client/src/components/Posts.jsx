@@ -1,56 +1,43 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Post from "./Post";
 import Loading from "./Loading";
-import { postAction } from "../redux/postSlice";
+import { useGetTimeLinePostsQuery } from "../api/postApi";
+import { Error } from "../pages";
 import Modal from "./Modal";
+import { motion } from "framer-motion";
+import { slideUp } from "../styles/variants";
 
 const Posts = () => {
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
+  const { user } = useSelector((state) => state.user.user);
   const { showModal } = useSelector((state) => state.post);
-  const [posts, setPost] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      setLoading(true);
-      try {
-        const { data } =
-          user?.followings.length > 1
-            ? await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/timeline/${user?._id}`)
-            : await axios.get(`${process.env.REACT_APP_API_URL}/api/posts`);
-        setPost(data);
-        dispatch(postAction.fetchPost(data));
-        setLoading(false);
-      } catch (err) {
-        console.log(err.message);
-        setLoading(false);
-      }
-    };
-    fetchPosts();
-  }, [user._id, dispatch, user.followings.length]);
+  const {
+    data: posts,
+    isLoading,
+    isError,
+    error,
+  } = useGetTimeLinePostsQuery(
+    user.followings?.length > 1 ? `/timeline/${user._id}` : "/"
+  );
 
-  const sortPost = posts
-    ?.slice()
-    .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
-    .reverse();
-
+  if (isLoading) return <Loading />;
+  if (isError) return <Error error={error} />;
   return (
     <>
-      <div className="col-span-12 md:col-span-6">
-        {loading ? (
-          <Loading />
-        ) : (
-          sortPost.map((post) => (
-            <div className="" key={post._id}>
-              <Post post={post} />
-            </div>
-          ))
-        )}
-      </div>
-      {showModal && <Modal />}
+      <motion.div
+        variants={slideUp}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        className="col-span-12 md:col-span-6"
+      >
+        {posts.map((post) => (
+          <div key={post._id}>
+            <Post post={post} />
+          </div>
+        ))}
+      </motion.div>
+      {showModal.isShow && <Modal />}
     </>
   );
 };

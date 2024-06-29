@@ -1,34 +1,29 @@
-import axios from "axios";
-import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { motion } from "framer-motion";
 import { postAction } from "../redux/postSlice";
 import Modal from "./Modal";
+import { fadeInVariant } from "../styles/variants";
 
 const ExplorePost = ({ post }) => {
   const dispatch = useDispatch();
   const { showModal } = useSelector((state) => state.post);
-  const [loading, setLoading] = useState(false);
 
   const fetchComments = async (id) => {
-    setLoading(true);
-    dispatch(postAction.showModal(true));
-    dispatch(postAction.singlePost(post));
-    try {
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/${id}`);
-      dispatch(postAction.commentsPost(data.comments));
-      setLoading(false);
-    } catch (err) {
-      console.log(err.message);
-      setLoading(false);
-    }
+    dispatch(postAction.showModal({ isShow: true, postId: id }));
   };
 
   return (
     <div>
-      <div className="profile-image-container mb-3 cursor-pointer">
-        <img src={post.image} alt="" className="" onClick={() => fetchComments(post._id)} />
-      </div>
-      {showModal && <Modal loading={loading} />}
+      <motion.div
+        variants={fadeInVariant}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        className="profile-image-container mb-3 cursor-pointer"
+      >
+        <img src={post.image} alt="" onClick={() => fetchComments(post._id)} />
+      </motion.div>
+      {showModal.isShow && <Modal />}
     </div>
   );
 };

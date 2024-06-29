@@ -1,48 +1,38 @@
-import React from 'react'
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import axios from 'axios';
-import Loading from '../components/Loading';
-import SuggestUser from '../components/SuggestUser';
+import { useSelector } from "react-redux";
+import { motion } from "framer-motion";
+import Loading from "../components/Loading";
+import SuggestUser from "../components/SuggestUser";
+import { useGetToFollowUserQuery } from "../api/userApi";
+import Error from "./Error";
+import { fadeInVariant } from "../styles/variants";
 
 const Suggest = () => {
-    const user = useSelector(state => state.user.user);
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(false);    
-    const suggest = true;
+  const { user } = useSelector((state) => state.user.user);
+  const { data, isLoading, error } = useGetToFollowUserQuery({
+    userId: user._id,
+    limit: "",
+  });
 
-    useEffect(() => {
-        setLoading(true);
-        const fetchUsers = async () => {
-            const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/tofollow?username=${user?.username}`);            
-            setUsers(data);
-            setLoading(false);
-        };
-        fetchUsers();
-    },[user]);
-
-    const filterUser = users?.filter( el => el._id !== user._id);
-
+  if (isLoading) return <Loading />;
+  if (error) return <Error error={error.message} />;
   return (
-    <div className='max-w-xl mx-auto px-3 mt-20'>
-        {loading ? <Loading />
-        :(
-            <div className="">
-                <div className="">
-                    <p className="capitalize font-medium text-left">Suggested</p>              
-                    <div className="users">
-                        {filterUser.map(user => (
-                            <div key={user._id}>
-                                <SuggestUser user={user} suggest={suggest} />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </div>
-        )}
-    </div>
-  )
-}
+    <motion.div
+      variants={fadeInVariant}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="max-w-xl mx-auto px-3 mt-20"
+    >
+      <p className="capitalize font-medium text-left">Suggested</p>
+      <div className="users">
+        {data.map((user) => (
+          <div key={user._id}>
+            <SuggestUser user={user} suggest={true} />
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+};
 
-export default Suggest
+export default Suggest;

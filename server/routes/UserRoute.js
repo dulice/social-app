@@ -1,11 +1,13 @@
 const router = require('express').Router();
-const { updateUser, deleteUser, getUsers, tofollowUsers, eachUser, followingUser, followers, followUser, unfollowUser } = require('../controller/UserController');
+const { updateUser, deleteUser, getUsers, tofollowUsers, eachUser, followingUser, followers, followUser, unfollowUser, getUser } = require('../controller/UserController');
+const { isAuth } = require('../utlis');
 
-router.put('/:id', updateUser);
-router.delete('/:id', deleteUser);
+router.put('/:id', isAuth, updateUser);
+router.delete('/:id', isAuth, deleteUser);
 router.get('/', getUsers);
-router.get('/tofollow', tofollowUsers);
 router.get('/eachuser', eachUser);
+router.get('/:id', getUser);
+router.get('/tofollow/:id', tofollowUsers);
 router.get('/friends/:userId', followingUser);
 router.get('/follower/:userId', followers);
 router.put('/:id/follow', followUser);

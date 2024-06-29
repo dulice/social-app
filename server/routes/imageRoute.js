@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
                 }
             }
         );
-        res.status(200).json(uploadImage.secure_url);
+        res.status(200).json({image: uploadImage.secure_url, publicId: uploadImage.public_id});
     } catch (err) {
         res.status(500).json({message: "Profile not found!"});
     }
@@ -33,9 +33,20 @@ router.post('/postimage', async (req, res) => {
                 }
             }
         );
-        res.status(200).json(uploadImage.secure_url);
+        res.status(200).json({image: uploadImage.secure_url, publicId: uploadImage.public_id});
     } catch (err) {
-        res.status(500).json({message: "image not found."});
+        res.status(500).json({message: "image not found to upload."});
+    }
+})
+
+router.put('/destory', async (req, res) => {
+    try {
+        await cloudinary.uploader.destroy(req.body.publicId, (result) => {
+            console.log(result)
+        });
+        res.status(200).json({message: "image deleted."});
+    } catch (error) {
+        res.status(500).json({message: "image not found to delete."});
     }
 })
 

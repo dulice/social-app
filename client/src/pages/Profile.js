@@ -1,146 +1,80 @@
-import React, { useCallback, useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import Loading from "../components/Loading";
 import { useParams } from "react-router-dom";
 import ExplorePost from "../components/ExplorePost";
 import SuggestUser from "../components/SuggestUser";
 import { HiX } from "react-icons/hi";
-import DefaultUser from '../assets/default_user.jpg';
+import DefaultUser from "../assets/default_user.jpg";
+import { useGetUserQuery } from "../api/userApi";
+import { useGetOwnerPostsQuery } from "../api/postApi";
+import Error from "./Error";
+import { fadeInVariant } from "../styles/variants";
 
 const Profile = () => {
-  const { username } = useParams();
-  const [user, setUser] = useState({});
-  const [posts, setPosts] = useState([]);
-  const [followingUsers, setFollowingUsers] = useState([]);
-  const [followerUsers, setFollowerUsers] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const { userId } = useParams();
   const [isfollowing, setIsfollowing] = useState(false);
   const [isfollower, setIsfollower] = useState(false);
-  const [count, setCount] = useState(0);
 
-  let following = true;
-  let follower = true;
-
-  const fetchUser = useCallback(() => {
-    const User = async () => {
-      const { data } = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/users/eachuser?username=${username}`
-        );
-        setUser(data);
-    }
-    User();
-  },[username]) ;
-  
-  useEffect(() => {
-    setLoading(true);
-    const fetchPosts = async () => {
-      try {
-        const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/post/${username}`);
-        setPosts(data.posts);
-        setCount(data.countPosts);
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-        setLoading(false);
-      }
-    };
-    fetchPosts();
-  }, [username]);
-
-  useEffect(() => {
-    const User = async () => {
-      setLoading(true);
-      try {
-        await fetchUser();
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-        setLoading(false);
-      }
-    };
-    User();
-  }, [fetchUser]);
-
-  const handleFollowing = async () => {
+  const { data: user, isLoading: loading } = useGetUserQuery(userId);
+  const { data, isLoading, isError, error } = useGetOwnerPostsQuery(userId);
+  const handleFollowing = () => {
     setIsfollowing(true);
-    try {
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/friends/${user?._id}`);
-      setFollowingUsers(data);
-      await fetchUser();
-    } catch (err) {
-      console.log(err.message);
-    }
   };
 
-  const handleFollowers = async () => {
+  const handleFollowers = () => {
     setIsfollower(true);
-    try {
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/follower/${user?._id}`);
-      setFollowerUsers(data);
-      await fetchUser();
-    } catch (err) {
-      console.log(err.message);
-    }
   };
+
+  if (isLoading || loading) return <Loading />;
+  if (isError) return <Error error={error} />;
 
   return (
-    <div className="max-w-4xl mx-auto px-3 text-left mt-20">
-      {loading ? (
-        <Loading />
-      ) : (
-        <div className="grid grid-cols-12 items-center">
-          <div className="col-span-12 md:col-span-3">
-            {user.profilePicture ? (
-              <img
-                className="mx-auto md:mx-0 w-32 h-32 object-cover rounded-full"
-                src={user.profilePicture}
-                alt=""
-              />
-            ) : (
-              <img
-                className="mx-auto md:mx-0 w-32 h-32 object-cover rounded-full"
-                src={DefaultUser}
-                alt=""
-              />
-            )}
-          </div>
-          <div className="col-span-12 md:col-span-4">
-            <p className="text-center md:text-left text-3xl">{user.username}</p>
-            <div className="grid grid-cols-12 my-3">
-              <div className="col-span-4">{count} posts</div>
-              <div
-                className="col-span-4 cursor-pointer"
-                onClick={handleFollowers}
-              >
-                {user?.followers?.length} followers
-              </div>
-              <div
-                className="col-span-4 cursor-pointer"
-                onClick={handleFollowing}
-              >
-                {user?.followings?.length} followings
-              </div>
+    <motion.div
+      variants={fadeInVariant}
+      initial="hidden"
+      animate="visible"
+      exit="exit"
+      className="max-w-4xl mx-auto px-3 text-left mt-20"
+    >
+      <div className="grid grid-cols-12 items-center">
+        <div className="col-span-12 md:col-span-3">
+          <img
+            className="mx-auto md:mx-0 w-32 h-32 object-cover rounded-full"
+            src={user.profilePicture ? user.profilePicture : DefaultUser}
+            alt=""
+          />
+        </div>
+        <div className="col-span-12 md:col-span-5">
+          <p className="text-center md:text-left text-3xl">{user.username}</p>
+          <div className="grid grid-cols-12 my-3">
+            <div className="col-span-4">{data.countPosts} posts</div>
+            <div
+              className="col-span-4 cursor-pointer"
+              onClick={handleFollowers}
+            >
+              {user.followers?.length} followers
+            </div>
+            <div
+              className="col-span-4 cursor-pointer"
+              onClick={handleFollowing}
+            >
+              {user.followings?.length} followings
             </div>
           </div>
         </div>
+      </div>
+      <hr className="m-4" />
+      {data.posts.length <= 0 && (
+        <p className="font-bold text-center">No Post Available</p>
       )}
-
-      {loading ? (
-        <Loading />
-      ) : (
-        <>
-          {posts.length <= 0 && (
-            <p className="font-bold text-center">No Post Available</p>
-          )}
-          <div className="divide-y grid grid-cols-12 items-center mt-5 gap-6">
-            {posts.map((post) => (
-              <div key={post._id} className="col-span-4">
-                <ExplorePost post={post} />
-              </div>
-            ))}
+      <div className="divide-y grid grid-cols-12 items-center mt-5 gap-6">
+        {data.posts.map((post) => (
+          <div key={post._id} className="col-span-4">
+            <ExplorePost post={post} />
           </div>
-        </>
-      )}
+        ))}
+      </div>
 
       {isfollowing && (
         <div
@@ -155,11 +89,15 @@ const Profile = () => {
             />
           </div>
           <div className="m-7">
-            {followingUsers?.map((user) => (
-              <div className="" key={user._id}>
-                <SuggestUser user={user} following={following} />
-              </div>
-            ))}
+            {user.followings.length > 0 ? (
+              user.followings?.map((user) => (
+                <div className="" key={user._id}>
+                  <SuggestUser user={user} following={true} />
+                </div>
+              ))
+            ) : (
+              <p className="text-center">No Following yet.</p>
+            )}
           </div>
         </div>
       )}
@@ -177,19 +115,19 @@ const Profile = () => {
             />
           </div>
           <div className="m-7">
-            {followerUsers?.map((user) => (
-              <div className="" key={user._id}>
-                <SuggestUser
-                  user={user}
-                  follower={follower}
-                  username={username}
-                />
-              </div>
-            ))}
+            {user.followers.length > 0 ? (
+              user.followers?.map((user) => (
+                <div className="" key={user._id}>
+                  <SuggestUser user={user} follower={true} />
+                </div>
+              ))
+            ) : (
+              <p className="text-center">No Follower yet.</p>
+            )}
           </div>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

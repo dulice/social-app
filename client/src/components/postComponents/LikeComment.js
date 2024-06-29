@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { socket } from "../../context/appContext";
@@ -6,19 +5,19 @@ import { postAction } from "../../redux/postSlice";
 import { TbMessageCircle2, TbSend } from "react-icons/tb";
 import { BsBookmark, BsEmojiSmile, BsHeart, BsHeartFill } from "react-icons/bs";
 import moment from "moment";
-import Loading from "../Loading";
+import { useAddCommentMutation } from "../../api/postApi";
 
 const LikeComment = ({ post }) => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
+  const { user } = useSelector((state) => state.user.user);
   const { likeCount } = useSelector((state) => state.post);
+  const [addComment] = useAddCommentMutation();
   const [like, setLike] = useState(false);
-  const [loading, setLoading] = useState(false);
   const [comment, setComment] = useState("");
   const [initialLike, setInitialLike] = useState(true);
 
   useEffect(() => {
-    if (post.likes.includes(user._id)) {
+    if (post.likes?.includes(user._id)) {
       setLike(true);
     }
   }, [user._id, post.likes]);
@@ -41,32 +40,13 @@ const LikeComment = ({ post }) => {
   };
 
   const fetchComments = async (id) => {
-    setLoading(true);
-    dispatch(postAction.showModal(true));
-    dispatch(postAction.singlePost(post));
-    try {
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/posts/${id}`);
-      dispatch(postAction.commentsPost(data.comments));
-      setLoading(false);
-    } catch (err) {
-      console.log(err.message);
-      setLoading(false);
-    }
+    dispatch(postAction.showModal({isShow: true, postId: id}));
   };
 
-  const handleComment = async (id) => {
-    try {
-      const { data } = await axios.put(`${process.env.REACT_APP_API_URL}/api/posts/comment/${id}`, {
-        username: user.username,
-        profilePicture: user.profilePicture,
-        comment,
-      });
-      // console.log(data);
-      dispatch(postAction.commentsPost(data.comments));
-      setComment("");
-    } catch (err) {
-      console.log(err.message);
-    }
+  const handleComment = async (e) => {
+    e.preventDefault();
+    await addComment({ id: post._id, userId: user._id, comment });
+    setComment("");
   };
   return (
     <>
@@ -89,7 +69,7 @@ const LikeComment = ({ post }) => {
           )}
           <button
             className="mr-3 cursor-pointer hover:text-gray-600 duration-300"
-            onClick={() => (loading ? <Loading /> : fetchComments(post._id))}
+            onClick={() => fetchComments(post._id)}
           >
             <TbMessageCircle2 />
           </button>
@@ -103,26 +83,20 @@ const LikeComment = ({ post }) => {
       </div>
       <div className="text-left text-gray-600 leading-7">
         <p className="">
-          {initialLike ? post.likes.length : likeCount}{" "}
+          {initialLike ? post.likes?.length : likeCount}{" "}
           {likeCount > 1
             ? " people like this post."
             : " person like this post."}
         </p>
         <p className=" text-black">
-          {post.description.length > 30
-            ? post.description.substring(0, 30)
+          {post.description?.length > 30
+            ? post.description.substring(0, 30) + "...more"
             : post.description}
-          <span>{post.description.length > 30 && "...more"}</span>
         </p>
         <p className="text-sm uppercase text-gray-500">
           {moment(post.createdAt).fromNow()}
         </p>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleComment(post._id);
-          }}
-        >
+        <form onSubmit={handleComment}>
           <div className="flex items-center w-full text-gray-900 my-3">
             <BsEmojiSmile className="mr-3 text-2xl" />
             <input

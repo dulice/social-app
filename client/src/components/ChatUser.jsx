@@ -3,10 +3,10 @@ import React, { useContext, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { socket, Store } from "../context/appContext";
-import DefaultUser from '../assets/default_user.jpg';
+import DefaultUser from "../assets/default_user.jpg";
 
 const ChatUser = () => {
-  const user = useSelector((state) => state.user.user);
+  const { user } = useSelector((state) => state.user.user);
   const {
     friends,
     setFriends,
@@ -38,7 +38,9 @@ const ChatUser = () => {
     //     setFriends(friend);
     // });
     const fetchFollowingsUser = async () => {
-      const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/api/users/friends/${user._id}`);
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/users/friends/${user._id}`
+      );
       setFriends(data);
     };
     fetchFollowingsUser();
@@ -52,7 +54,11 @@ const ChatUser = () => {
         </div>
         <hr />
         <div className="m-5">
-          {friends.length < 1 && <Link to="/" className="text-blue-600">Follow User to Start Conversation.</Link>}
+          {friends?.length < 1 && (
+            <Link to="/" className="text-blue-600">
+              Follow User to Start Conversation.
+            </Link>
+          )}
           {friends?.map((member) => (
             <div className="" key={member._id}>
               <div

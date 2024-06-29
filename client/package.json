@@ -16,6 +16,7 @@
     "emoji-picker-react": "^3.5.1",
     "flowbite": "^1.4.7",
     "flowbite-react": "^0.0.27",
+    "framer-motion": "^6.2.8",
     "gapi-script": "^1.2.0",
     "moment": "^2.29.3",
     "postcss": "^8.4.14",

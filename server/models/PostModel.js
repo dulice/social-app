@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const postSchema = new mongoose.Schema({
     userId: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
         required: true,
     },
     description: {
@@ -11,17 +12,23 @@ const postSchema = new mongoose.Schema({
     image: {
         type: String,
     },
+    publicId: {
+        type: String,
+    },
     video: {
         type: String,
     },
-    likes: {
-        type: Array,
-        default: [],
-    },
-    comments: {
-        type: Array,
-        default: [],
-    }
+    likes: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    }],
+    comments: [{
+        userId: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+        },
+        comment: String,
+    }]
 }, {timestamps: true});
 
 const Post = mongoose.model('Post', postSchema);
